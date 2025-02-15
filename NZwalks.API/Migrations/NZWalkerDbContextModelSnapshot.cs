@@ -47,11 +47,11 @@ namespace NZwalks.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RegionPhotoUrl")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
-                        .IsRequired()
+                    b.Property<string>("RegionPhotoUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
