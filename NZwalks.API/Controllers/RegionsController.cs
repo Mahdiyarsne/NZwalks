@@ -56,5 +56,88 @@ namespace NZwalks.API.Controllers
 
             return Ok(regions);
         }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] AddRegionRequestDto addRegionRequestDto)
+        {
+            var regionModel = new Region
+            {
+                Code = addRegionRequestDto.Code,
+                Name = addRegionRequestDto.Name,
+                RegionPhotoUrl = addRegionRequestDto.RegionPhotoUrl
+            };
+
+            context.Regions.Add(regionModel);
+
+            context.SaveChanges();
+
+            var regionDto = new RegionDto
+            {
+                Id = regionModel.Id,
+                Name = regionModel.Name,
+                Code = regionModel.Code,
+                RegionPhotoUrl=regionModel.RegionPhotoUrl
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute]Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+        {
+            var regionModel = context.Regions.FirstOrDefault(x => x.Id == id);
+
+            if (regionModel == null)  
+            { 
+               return NotFound();
+            
+            }
+
+            regionModel.Code = updateRegionRequestDto.Code;
+            regionModel.Name = updateRegionRequestDto.Name;
+            regionModel.RegionPhotoUrl = updateRegionRequestDto.RegionPhotoUrl;
+
+            var regionDto = new RegionDto
+            {
+                Id = regionModel.Id,
+                Name = regionModel.Name,
+                Code = regionModel.Code,
+                RegionPhotoUrl = regionModel.RegionPhotoUrl
+            };
+
+            context.SaveChanges();
+
+            return Ok(regionDto);
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id) 
+        { 
+          var regionModel= context.Regions.FirstOrDefault(x => x.Id == id);
+          
+            if(regionModel == null)
+
+            {
+                return NotFound();
+            }
+
+            context.Regions.Remove(regionModel);
+            context.SaveChanges();
+
+            //Map Domain Model to Dto
+            var regionDto = new RegionDto
+            {
+                RegionPhotoUrl = regionModel.RegionPhotoUrl,
+                Code = regionModel.Code,
+                Name = regionModel.Name,
+                Id = regionModel.Id
+            };
+
+
+            return Ok(regionModel);
+        }
+
     }
 }
