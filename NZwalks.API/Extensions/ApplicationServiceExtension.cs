@@ -2,6 +2,7 @@
 using NZwalks.API.Data;
 using NZwalks.API.Mapping;
 using NZwalks.API.Repositories;
+using NZwalks.API.Repositories.WalkRepositroy;
 
 namespace NZwalks.API.Extensions
 {
@@ -15,6 +16,7 @@ namespace NZwalks.API.Extensions
 
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles));
+            services.AddScoped<IWalkRepository, WalkRepository>();
 
             return services;
         }

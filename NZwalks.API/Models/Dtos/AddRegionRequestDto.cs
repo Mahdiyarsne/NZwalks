@@ -1,11 +1,13 @@
-﻿namespace NZwalks.API.Models.Dto
+﻿namespace NZwalks.API.Models.Dtos
 {
-    public class UpdateRegionRequestDto
+    public class AddRegionRequestDto
     {
+
         public string Code { get; set; }
 
         public string Name { get; set; }
 
         public string? RegionPhotoUrl { get; set; }
+
     }
 }

@@ -4,17 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NZwalks.API.Data;
 using NZwalks.API.Models.Domain;
-using NZwalks.API.Models.Dto;
+using NZwalks.API.Models.Dtos;
 using NZwalks.API.Repositories;
 
 namespace NZwalks.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class RegionsController(NZWalkerDbContext context,
         IRegionRepository regionRepository,
         IMapper mapper
-        ) : ControllerBase
+        ) : BaseApiController
     {
         [HttpGet]
         public async Task<IActionResult> GetAll()

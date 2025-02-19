@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace NZwalks.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StudentsController : ControllerBase
+
+    public class StudentsController : BaseApiController
     {
         [HttpGet]
         public IActionResult GetAllStudents()
