@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NZwalks.API.CustomActionFilters;
 using NZwalks.API.Models.Domain;
 using NZwalks.API.Models.Dto.WalksDto;
 using NZwalks.API.Models.Dtos.WalksDto;
@@ -13,15 +13,15 @@ namespace NZwalks.API.Controllers
     {
         //create walk
         [HttpPost]
+        [VaildateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
-            //Map Dto to domain model
-            var walkModel = mapper.Map<Walk>(addWalkRequestDto);
+                //Map Dto to domain model
+                var walkModel = mapper.Map<Walk>(addWalkRequestDto);
 
-            await walkRepository.CreateAsync(walkModel);
+                await walkRepository.CreateAsync(walkModel);
 
-            return Ok(mapper.Map<WalkDto>(walkModel));
-
+                return Ok(mapper.Map<WalkDto>(walkModel));
         }
 
         //get walk
@@ -51,19 +51,19 @@ namespace NZwalks.API.Controllers
         //update walk by id
         [HttpPut]
         [Route("{id:Guid}")]
+        [VaildateModel]
         public async Task<IActionResult> UpdateById([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto)
         {
-            var walkModel = mapper.Map<Walk>(updateWalkRequestDto);
+                var walkModel = mapper.Map<Walk>(updateWalkRequestDto);
 
-            walkModel = await walkRepository.UpdateAsync(id, walkModel);
+                walkModel = await walkRepository.UpdateAsync(id, walkModel);
 
-            if (walkModel == null)
-            {
-                return NotFound();
-            }
+                if (walkModel == null)
+                {
+                    return NotFound();
+                }
 
             return Ok(mapper.Map<WalkDto>(walkModel));
-
         }
 
         //delete walk
@@ -71,9 +71,9 @@ namespace NZwalks.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-             var deletedWalkModel = await walkRepository.DeleteAsync(id);
+            var deletedWalkModel = await walkRepository.DeleteAsync(id);
 
-            if(deletedWalkModel == null)
+            if (deletedWalkModel == null)
             {
                 return NotFound();
             }

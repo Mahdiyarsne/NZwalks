@@ -1,11 +1,10 @@
-﻿
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using NZwalks.API.Data;
-using NZwalks.API.Models.Domain;
 using NZwalks.API.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
 using NZwalks.API.Repositories;
+using NZwalks.API.Models.Domain;
+using NZwalks.API.CustomActionFilters;
 
 namespace NZwalks.API.Controllers
 {
@@ -42,23 +41,24 @@ namespace NZwalks.API.Controllers
 
         //create region
         [HttpPost]
+        [VaildateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            var regionModel = mapper.Map<Region>(addRegionRequestDto);
+                //Convert Dto to domain model
+                var regionModel = mapper.Map<Region>(addRegionRequestDto);
 
+                regionModel = await regionRepository.CreateAsync(regionModel);
 
-            regionModel = await regionRepository.CreateAsync(regionModel);
+                //map domain model back to dto
+                var regionDto = mapper.Map<RegionDto>(regionModel);
 
-            //map domain model back to dto
-            var regionDto = mapper.Map<RegionDto>(regionModel);
-
-            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+                return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
         }
-
 
         //update region
         [HttpPut]
         [Route("{id:Guid}")]
+        [VaildateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             //map model to dto
