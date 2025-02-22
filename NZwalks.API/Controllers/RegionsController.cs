@@ -14,6 +14,7 @@ namespace NZwalks.API.Controllers
         IMapper mapper
         ) : BaseApiController
     {
+        //get all  region
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -22,9 +23,9 @@ namespace NZwalks.API.Controllers
             return Ok(mapper.Map<List<RegionDto>>(regionsModel));
         }
 
+        //get region by id
         [HttpGet]
         [Route("{id:Guid}")]
-
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
 
@@ -39,6 +40,7 @@ namespace NZwalks.API.Controllers
             return Ok(mapper.Map<RegionDto>(regionsModel));
         }
 
+        //create region
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
@@ -53,6 +55,8 @@ namespace NZwalks.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
         }
 
+
+        //update region
         [HttpPut]
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
@@ -72,6 +76,8 @@ namespace NZwalks.API.Controllers
             return Ok(mapper.Map<RegionDto>(regionModel));
         }
 
+
+        //delete region
         [HttpDelete]
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)

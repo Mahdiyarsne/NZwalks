@@ -12,8 +12,8 @@ using NZwalks.API.Data;
 namespace NZwalks.API.Migrations
 {
     [DbContext(typeof(NZWalkerDbContext))]
-    [Migration("20250219105918_IntialAdded")]
-    partial class IntialAdded
+    [Migration("20250222121308_intialAdded")]
+    partial class intialAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

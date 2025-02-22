@@ -5,7 +5,7 @@
 namespace NZwalks.API.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialAdded : Migration
+    public partial class intialAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
