@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using NZwalks.API.Repositories;
 using NZwalks.API.Models.Domain;
 using NZwalks.API.CustomActionFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NZwalks.API.Controllers
 {
-    public class RegionsController(NZWalkerDbContext context,
-        IRegionRepository regionRepository,
-        IMapper mapper
+    [Authorize]
+    public class RegionsController(IRegionRepository regionRepository
+        ,IMapper mapper
         ) : BaseApiController
+
     {
         //get all  region
         [HttpGet]
@@ -44,15 +46,15 @@ namespace NZwalks.API.Controllers
         [VaildateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-                //Convert Dto to domain model
-                var regionModel = mapper.Map<Region>(addRegionRequestDto);
+            //Convert Dto to domain model
+            var regionModel = mapper.Map<Region>(addRegionRequestDto);
 
-                regionModel = await regionRepository.CreateAsync(regionModel);
+            regionModel = await regionRepository.CreateAsync(regionModel);
 
-                //map domain model back to dto
-                var regionDto = mapper.Map<RegionDto>(regionModel);
+            //map domain model back to dto
+            var regionDto = mapper.Map<RegionDto>(regionModel);
 
-                return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
         }
 
         //update region
