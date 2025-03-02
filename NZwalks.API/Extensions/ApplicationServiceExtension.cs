@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NZwalks.API.Data;
@@ -33,6 +34,22 @@ namespace NZwalks.API.Extensions
                 });
 
             services.AddDbContext<NZWalksAuthDbContext>(options => options.UseSqlServer(config.GetConnectionString("NZWalksAuthConnectionString")));
+
+            services.AddIdentityCore<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
+                .AddEntityFrameworkStores<NZWalksAuthDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 6;
+                opt.Password.RequiredUniqueChars = 3;
+            });
 
             return services;
         }
