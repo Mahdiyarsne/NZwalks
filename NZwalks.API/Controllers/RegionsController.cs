@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using NZwalks.API.Data;
 using NZwalks.API.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using NZwalks.API.Repositories;
@@ -9,14 +8,15 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NZwalks.API.Controllers
 {
-    [Authorize]
+
     public class RegionsController(IRegionRepository regionRepository
-        ,IMapper mapper
+        , IMapper mapper
         ) : BaseApiController
 
     {
         //get all  region
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
             var regionsModel = await regionRepository.GetAllAsync();
@@ -27,6 +27,7 @@ namespace NZwalks.API.Controllers
         //get region by id
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
 
@@ -44,6 +45,7 @@ namespace NZwalks.API.Controllers
         //create region
         [HttpPost]
         [VaildateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
             //Convert Dto to domain model
@@ -61,6 +63,7 @@ namespace NZwalks.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [VaildateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             //map model to dto
@@ -82,17 +85,15 @@ namespace NZwalks.API.Controllers
         //delete region
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer,Reader")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var regionModel = await regionRepository.DeleteAsync(id);
 
             if (regionModel == null)
-
             {
                 return NotFound();
             }
-
-
 
             return Ok(mapper.Map<RegionDto>(regionModel));
         }

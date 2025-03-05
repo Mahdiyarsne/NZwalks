@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using NZwalks.API.Data;
 using NZwalks.API.Mapping;
 using NZwalks.API.Repositories;
+using NZwalks.API.Repositories.TokenRepository;
 using NZwalks.API.Repositories.WalkRepositroy;
 
 namespace NZwalks.API.Extensions
@@ -14,13 +15,15 @@ namespace NZwalks.API.Extensions
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration config)
         {
+ 
             services.AddControllers();
             services.AddDbContext<NZWalkerDbContext>(options =>
               options.UseSqlServer(config.GetConnectionString("NZWalksConnectionString")));
 
-            services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles));
+            services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IWalkRepository, WalkRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
@@ -28,8 +31,8 @@ namespace NZwalks.API.Extensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer= config["Jwt:Issuer"],
-                    ValidAudience= config["Jwt:Audience"],
+                    ValidIssuer = config["Jwt:Issuer"],
+                    ValidAudience = config["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
                 });
 
@@ -51,7 +54,11 @@ namespace NZwalks.API.Extensions
                 opt.Password.RequiredUniqueChars = 3;
             });
 
+            
+
             return services;
         }
+
+     
     }
 }

@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NZwalks.API.Models.DTO.LoginDto;
 using NZwalks.API.Models.Dtos.LoginDto;
 using NZwalks.API.Models.Dtos.RegisterDto;
+using NZwalks.API.Repositories.TokenRepository;
 
 namespace NZwalks.API.Controllers
 {
 
-    public class AuthController(UserManager<IdentityUser> userManager) : BaseApiController
+    public class AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository) : BaseApiController
     {
 
         //register
@@ -56,8 +58,21 @@ namespace NZwalks.API.Controllers
 
                 if (checkPassword)
                 {
-                    //Create Token
-                    return Ok();
+                    //Get roles for this user
+                    var roles=  await userManager.GetRolesAsync(user);
+
+                    if (roles != null) 
+                    {
+                        //Create Token
+                        var token= tokenRepository.CreateToken(user, roles.ToList());
+
+                        var response = new LoginResponseDto
+                        {
+                            JwtToken = token,
+                        };
+
+                        return Ok(response);
+                    }   
                 }
 
             }
