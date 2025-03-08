@@ -4,7 +4,7 @@ using NZwalks.API.Models.Domain;
 
 namespace NZwalks.API.Repositories.WalkRepositroy
 {
-    public class WalkRepository(NZWalkerDbContext context) : IWalkRepository
+    public class WalkRepository(NZWalksDbContext context) : IWalkRepository
     {
         public async Task<Walk> CreateAsync(Walk walk)
         {

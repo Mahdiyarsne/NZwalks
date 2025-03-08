@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using NZwalks.API.Data;
 using NZwalks.API.Mapping;
 using NZwalks.API.Repositories;
+using NZwalks.API.Repositories.ImageRepository;
 using NZwalks.API.Repositories.TokenRepository;
 using NZwalks.API.Repositories.WalkRepositroy;
 
@@ -17,13 +18,15 @@ namespace NZwalks.API.Extensions
         {
  
             services.AddControllers();
-            services.AddDbContext<NZWalkerDbContext>(options =>
+            services.AddHttpContextAccessor();
+            services.AddDbContext<NZWalksDbContext>(options =>
               options.UseSqlServer(config.GetConnectionString("NZWalksConnectionString")));
 
             services.AddAutoMapper(typeof(AutoMapperProfiles));
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IWalkRepository, WalkRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<IImageRepository, LocalImageRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
