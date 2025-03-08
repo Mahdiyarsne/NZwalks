@@ -5,12 +5,14 @@ using NZwalks.API.Repositories;
 using NZwalks.API.Models.Domain;
 using NZwalks.API.CustomActionFilters;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 namespace NZwalks.API.Controllers
 {
 
     public class RegionsController(IRegionRepository regionRepository
         , IMapper mapper
+        , ILogger<RegionsController> logger
         ) : BaseApiController
 
     {
@@ -19,7 +21,10 @@ namespace NZwalks.API.Controllers
         [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
+            logger.LogInformation("GetAllRegions Action Method was invoked");
+
             var regionsModel = await regionRepository.GetAllAsync();
+            logger.LogInformation($"Finshed GetAllRegions request data :{JsonSerializer.Serialize(regionsModel)}");
 
             return Ok(mapper.Map<List<RegionDto>>(regionsModel));
         }
